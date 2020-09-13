@@ -32,11 +32,10 @@ var reply = [
 const usermessage = document.querySelector(".chat-message"); 
 var button = document.getElementById('btn');
 let chatareaouter = document.querySelectorAll('.chat .self') 
+const inputbox = document.getElementById('text1')
+const chatlogs = document.querySelector('.chatlogs')
 
 
-
-document.getElementById('output').style.visibility = 'hidden';
-document.getElementById('input').style.visibility = 'hidden';
 
 
 var alternative = ["Haha...", "Eh..."];
@@ -49,17 +48,16 @@ var alternative = ["Haha...", "Eh..."];
 button.addEventListener("click", function(){
     
 
-    document.getElementById('output').style.visibility = 'visible';
-    document.getElementById('input').style.visibility = 'visible';
-
+    
             
 		 //Enter button
 		 
         var input = document.getElementById("text1").value;
-		usermessage.innerHTML += input +"<br>";
+       inputbox.value = ""; //clear input value
+		createMessage("self",input)
         output(input);
         
-	
+	  
 });
 
 
@@ -78,9 +76,9 @@ function output(input){
 			var product = alternative[Math.floor(Math.random()*alternative.length)];
 		}
 	}
-	document.getElementById("botmessage").innerHTML = product;
-	speak(product);
-	document.getElementById("text1").value = ""; //clear input value
+	createMessage("bot", product)
+//	speak(product);
+	
 }
 
 function compare(arr, array, string){
@@ -95,6 +93,40 @@ function compare(arr, array, string){
 	}
 	return item;
 }
+
+function createMessage(e, text) {
+  // body...
+  let message = document.createElement('div');
+  message.classList.add('chat');
+  message.classList.add(e)
+  console.log(e);
+  let userPhoto = document.createElement('div');
+  userPhoto.classList.add('user-photo');
+  let img = document.createElement('img');
+  img.src = e+ ".jpg";
+  userPhoto.appendChild(img)
+  message.appendChild(userPhoto)
+  let textBox = document.createElement('p');
+  textBox.classList.add('chat-message')
+  textBox.id = e+ "message"
+  textBox.innerText = text
+  console.log(text);
+  message.appendChild(textBox);
+  /*
+  let 
+      <div class="chat self" id="output">
+        <div class="user-photo img"><img src="2.jpg"></div>
+        <div class="chat-message" id="selfmessage">
+        </div>
+      </div>
+      <div class="chat bot" id="input">
+        <div class="user-photo"><img src="1.jpg"></div>
+        <div class="chat-message" id="botmessage">
+        </div>
+      </div>*/
+      chatlogs.appendChild(message)
+}
+
 function speak(string){
 	var utterance = new SpeechSynthesisUtterance();
 	utterance.voice = speechSynthesis.getVoices().filter(function(voice){return voice.name == "Agnes";})[0];
